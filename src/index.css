@@ -258,6 +258,16 @@ input[type='checkbox'] { width: auto; }
 .recipient-results button { width: 100%; text-align: left; font: inherit; padding: 8px 10px; border: none; border-radius: 6px; background: none; cursor: pointer; }
 .recipient-results button:hover:not(:disabled) { background: #f7f5f1; }
 .recipient-results button:disabled { cursor: default; opacity: 0.6; }
+.notification-tabs { display: flex; width: fit-content; max-width: 100%; overflow-x: auto; margin-bottom: 16px; }
+.form-subhead { margin: 8px 0 0; padding-top: 14px; border-top: 1px solid var(--border); }
+.weekday-picker { display: flex; flex-wrap: wrap; gap: 6px; }
+.weekday-picker button {
+  font: inherit; font-size: 0.85rem; font-weight: 600; min-width: 52px; padding: 7px 10px; cursor: pointer;
+  border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--muted);
+}
+.weekday-picker button.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+.weekday-picker button:focus-visible { outline: 2px solid #ecd9b0; }
+.schedule-summary { padding: 10px 12px; border-radius: 8px; background: #fbf5e8; color: var(--primary-dark); font-weight: 600; }
 
 /* Theme picker */
 .theme-swatches { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
