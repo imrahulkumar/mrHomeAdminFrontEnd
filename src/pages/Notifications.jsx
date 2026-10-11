@@ -21,7 +21,10 @@ const REPEATS = [
   { id: 'alternate', label: 'Every other day' },
   { id: 'weekly', label: 'Weekly on selected days' },
   { id: 'once', label: 'One time, on a date' },
+  { id: 'everyMinute', label: 'Every minute (testing)' },
+  { id: 'every15s', label: 'Every 15 seconds (testing)' },
 ];
+const INTERVAL_REPEATS = { everyMinute: 'minute', every15s: '15 seconds' };
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const TABS = [
   { id: 'sent', label: 'Sent' },
@@ -55,6 +58,8 @@ function describeSchedule(s) {
     daily: `Every day ${at}`,
     alternate: `Every other day ${at}`,
     weekly: `Every ${[...s.weekdays].sort().map((d) => WEEKDAYS[d]).join(', ')} ${at}`,
+    everyMinute: `Every minute from ${formatDay(s.startDate)}, ${formatTime(s.time)}`,
+    every15s: `Every 15 seconds from ${formatDay(s.startDate)}, ${formatTime(s.time)}`,
   }[s.repeat];
   return s.endDate && s.repeat !== 'once' ? `${when} · until ${formatDay(s.endDate)}` : when;
 }
@@ -363,7 +368,12 @@ function NotificationForm({ initial, onClose, onSaved }) {
                   {REPEATS.map((r) => <option key={r.id} value={r.id}>{r.label}</option>)}
                 </select>
               </Field>
-              <Field label="Time *" hint={`Your time zone: ${form.timezone}`}>
+              <Field
+                label={INTERVAL_REPEATS[form.repeat] ? 'First send at *' : 'Time *'}
+                hint={INTERVAL_REPEATS[form.repeat]
+                  ? `Then every ${INTERVAL_REPEATS[form.repeat]}. A past time starts right away. Time zone: ${form.timezone}`
+                  : `Your time zone: ${form.timezone}`}
+              >
                 <input type="time" value={form.time} onChange={(e) => set('time')(e.target.value)} required />
               </Field>
               {form.repeat === 'weekly' && (
