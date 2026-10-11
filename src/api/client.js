@@ -1,4 +1,4 @@
-const BASE_URL = (import.meta.env.VITE_API_URL || 'https://mr-home-backend.vercel.app/api').replace(/\/$/, '');
+export const BASE_URL = (import.meta.env.VITE_API_URL || 'https://mr-home-backend.vercel.app/api').replace(/\/$/, '');
 const TOKEN_KEY = 'admin_token';
 
 export const tokenStore = {

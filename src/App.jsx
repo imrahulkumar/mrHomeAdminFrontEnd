@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import AdminLayout from './components/layout/AdminLayout';
 import { Loader } from './components/ui/Common';
+import InstallPrompt from './components/ui/InstallPrompt';
 import { useAuth } from './context/AuthContext';
 import Categories from './pages/Categories';
 import Dashboard from './pages/Dashboard';
@@ -13,6 +14,7 @@ import Settings from './pages/Settings';
 import SubCategories from './pages/SubCategories';
 import Users from './pages/Users';
 import Videos from './pages/Videos';
+import { appIconUrl } from './utils/pwa';
 
 export default function App() {
   const { user, checking } = useAuth();
@@ -21,6 +23,7 @@ export default function App() {
   if (!user) return <Login />;
 
   return (
+    <>
     <Routes>
       <Route element={<AdminLayout />}>
         <Route index element={<Dashboard />} />
@@ -36,5 +39,7 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
+    <InstallPrompt name="Store Admin" icon={appIconUrl(192)} />
+    </>
   );
 }

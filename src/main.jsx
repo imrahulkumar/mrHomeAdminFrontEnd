@@ -4,7 +4,10 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
+import { applyAppIdentity } from './utils/pwa';
 import './index.css';
+
+applyAppIdentity();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
