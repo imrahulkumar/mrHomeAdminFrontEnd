@@ -173,7 +173,7 @@ function SentList({ onEdit, newButton }) {
         empty={<EmptyState title="No notifications sent yet." action={newButton} />}
       >
         <div className="table-wrap">
-          <table className="table">
+          <table className="table table-stack">
             <thead><tr><th>Notification</th><th>Sent to</th><th>Status</th><th>Read by</th><th>Sent</th><th /></tr></thead>
             <tbody>
               {data.items.map((n) => {
@@ -181,10 +181,10 @@ function SentList({ onEdit, newButton }) {
                 return (
                   <tr key={n._id}>
                     <td><TitleCell item={n} extra={n.schedule && <Badge>Auto</Badge>} /></td>
-                    <td><AudienceCell item={n} /></td>
-                    <td>{expired ? <Badge tone="warning">Expired</Badge> : <StatusBadge active={n.isActive} />}</td>
-                    <td>{n.readCount}</td>
-                    <td className="small">{formatDate(n.createdAt)}</td>
+                    <td data-label="Sent to"><AudienceCell item={n} /></td>
+                    <td data-label="Status">{expired ? <Badge tone="warning">Expired</Badge> : <StatusBadge active={n.isActive} />}</td>
+                    <td data-label="Read by">{n.readCount}</td>
+                    <td data-label="Sent" className="small">{formatDate(n.createdAt)}</td>
                     <td className="actions">
                       <button
                         className="btn btn-sm"
@@ -244,20 +244,20 @@ function ScheduleList({ onEdit, newButton }) {
         empty={<EmptyState title="No scheduled notifications yet. Create one to send it automatically, e.g. every morning." action={newButton} />}
       >
         <div className="table-wrap">
-          <table className="table">
+          <table className="table table-stack">
             <thead><tr><th>Notification</th><th>Sent to</th><th>Repeats</th><th>Next send</th><th>Sent so far</th><th>Status</th><th /></tr></thead>
             <tbody>
               {schedules.map((s) => (
                 <tr key={s._id}>
                   <td><TitleCell item={s} /></td>
-                  <td><AudienceCell item={s} /></td>
-                  <td className="small">{describeSchedule(s)}</td>
-                  <td className="small">{s.nextRunAt ? formatDate(s.nextRunAt) : '—'}</td>
-                  <td className="small">
+                  <td data-label="Sent to"><AudienceCell item={s} /></td>
+                  <td data-label="Repeats" className="small">{describeSchedule(s)}</td>
+                  <td data-label="Next send" className="small">{s.nextRunAt ? formatDate(s.nextRunAt) : '—'}</td>
+                  <td data-label="Sent so far" className="small">
                     {s.runCount}
                     {s.lastRunAt && <span className="muted"> · last {formatDate(s.lastRunAt)}</span>}
                   </td>
-                  <td>{scheduleStatus(s)}</td>
+                  <td data-label="Status">{scheduleStatus(s)}</td>
                   <td className="actions">
                     <button className="btn btn-sm" onClick={() => onEdit({ ...s, mode: 'schedule', product: s.product?._id ?? '', endDate: s.endDate ?? '' })}>Edit</button>
                     <button className="btn btn-sm" onClick={() => sendNow(s)}>Send now</button>

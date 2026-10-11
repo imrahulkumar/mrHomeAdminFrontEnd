@@ -33,7 +33,7 @@ export default function Orders() {
       <div className="card">
         <AsyncContent loading={loading} error={error} onRetry={reload} isEmpty={data.items.length === 0} empty={<EmptyState title="No orders found." />}>
           <div className="table-wrap">
-            <table className="table">
+            <table className="table table-stack">
               <thead>
                 <tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th /></tr>
               </thead>
@@ -41,11 +41,11 @@ export default function Orders() {
                 {data.items.map((o) => (
                   <tr key={o._id}>
                     <td><strong>{o.orderNumber}</strong><div className="muted small">{formatDate(o.createdAt)}</div></td>
-                    <td>{o.user?.name}<div className="muted small">{o.user?.email}</div></td>
-                    <td>{o.items.reduce((n, i) => n + i.qty, 0)}</td>
-                    <td>{formatPrice(o.total)}</td>
-                    <td><span className="upper small">{o.payment.method}</span> <OrderBadge status={o.payment.status} /></td>
-                    <td><OrderBadge status={o.status} /></td>
+                    <td data-label="Customer">{o.user?.name}<div className="muted small">{o.user?.email}</div></td>
+                    <td data-label="Items">{o.items.reduce((n, i) => n + i.qty, 0)}</td>
+                    <td data-label="Total">{formatPrice(o.total)}</td>
+                    <td data-label="Payment"><span className="upper small">{o.payment.method}</span> <OrderBadge status={o.payment.status} /></td>
+                    <td data-label="Status"><OrderBadge status={o.status} /></td>
                     <td className="actions"><button className="btn btn-sm" onClick={() => setSelected(o)}>View</button></td>
                   </tr>
                 ))}
@@ -124,19 +124,21 @@ function OrderDetail({ order, onClose, onUpdated }) {
           </section>
         </div>
 
-        <table className="table">
-          <thead><tr><th>Item</th><th>Price</th><th>Qty</th><th>Total</th></tr></thead>
-          <tbody>
-            {order.items.map((i) => (
-              <tr key={i.product}>
-                <td>{i.name}</td>
-                <td>{formatPrice(i.price)}</td>
-                <td>{i.qty}</td>
-                <td>{formatPrice(i.price * i.qty)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="table-wrap">
+          <table className="table">
+            <thead><tr><th>Item</th><th>Price</th><th>Qty</th><th>Total</th></tr></thead>
+            <tbody>
+              {order.items.map((i) => (
+                <tr key={i.product}>
+                  <td>{i.name}</td>
+                  <td>{formatPrice(i.price)}</td>
+                  <td>{i.qty}</td>
+                  <td>{formatPrice(i.price * i.qty)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <div className="totals">
           <div className="kv"><span>Subtotal</span><span>{formatPrice(order.subtotal)}</span></div>
           <div className="kv"><span>GST</span><span>{formatPrice(order.gst)}</span></div>

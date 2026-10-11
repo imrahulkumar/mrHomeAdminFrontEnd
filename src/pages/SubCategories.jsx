@@ -55,7 +55,7 @@ export default function SubCategories() {
           empty={<EmptyState title={categories.length ? 'No sub-categories here yet.' : 'Create a category first.'} />}
         >
           <div className="table-wrap">
-            <table className="table">
+            <table className="table table-stack">
               <thead>
                 <tr><th>Sub-category</th><th>Parent category</th><th>Products</th><th>Order</th><th>Status</th><th /></tr>
               </thead>
@@ -71,10 +71,10 @@ export default function SubCategories() {
                         </div>
                       </div>
                     </td>
-                    <td>{s.category?.name}</td>
-                    <td>{s.productCount}</td>
-                    <td>{s.order}</td>
-                    <td><StatusBadge active={s.isActive} /></td>
+                    <td data-label="Parent">{s.category?.name}</td>
+                    <td data-label="Products">{s.productCount}</td>
+                    <td data-label="Order">{s.order}</td>
+                    <td data-label="Status"><StatusBadge active={s.isActive} /></td>
                     <td className="actions">
                       <button className="btn btn-sm" onClick={() => setEditing({ ...s, category: s.category?._id })}>Edit</button>
                       <button className="btn btn-sm btn-danger-ghost" onClick={() => handleDelete(s)}>Delete</button>

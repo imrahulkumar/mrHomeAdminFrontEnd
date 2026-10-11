@@ -88,7 +88,7 @@ export default function Products() {
           empty={<EmptyState title="No products found." action={<Link to="/products/new" className="btn btn-primary">Add a product</Link>} />}
         >
           <div className="table-wrap">
-            <table className="table">
+            <table className="table table-stack">
               <thead>
                 <tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th /></tr>
               </thead>
@@ -104,17 +104,17 @@ export default function Products() {
                         </div>
                       </div>
                     </td>
-                    <td>
+                    <td data-label="Category">
                       {p.category?.name}
                       {p.subCategory && <div className="muted small">{p.subCategory.name}</div>}
                     </td>
-                    <td>
+                    <td data-label="Price">
                       {formatPrice(p.price)}
                       {p.mrp > p.price && <div className="muted small strike">{formatPrice(p.mrp)}</div>}
                     </td>
-                    <td className={p.stock === 0 ? 'text-danger' : ''}>{p.stock}</td>
-                    <td>
-                      <div className="row">
+                    <td data-label="Stock" className={p.stock === 0 ? 'text-danger' : ''}>{p.stock}</td>
+                    <td data-label="Status">
+                      <div className="row wrap">
                         <button className="badge-btn" onClick={() => toggleActive(p)} title="Click to toggle">
                           <StatusBadge active={p.isActive} />
                         </button>

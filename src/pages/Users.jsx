@@ -49,7 +49,7 @@ export default function Users() {
       <div className="card">
         <AsyncContent loading={loading} error={error} onRetry={reload} isEmpty={data.items.length === 0} empty={<EmptyState title="No users found." />}>
           <div className="table-wrap">
-            <table className="table">
+            <table className="table table-stack">
               <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th /></tr></thead>
               <tbody>
                 {data.items.map((u) => {
@@ -57,10 +57,10 @@ export default function Users() {
                   return (
                     <tr key={u._id}>
                       <td><strong>{u.name}</strong>{isMe && <span className="muted small"> (you)</span>}</td>
-                      <td>{u.email}</td>
-                      <td><Badge tone={u.role === 'admin' ? 'info' : 'neutral'}>{u.role}</Badge></td>
-                      <td><Badge tone={u.isActive ? 'success' : 'danger'}>{u.isActive ? 'Active' : 'Disabled'}</Badge></td>
-                      <td className="small">{formatDate(u.createdAt)}</td>
+                      <td data-label="Email">{u.email}</td>
+                      <td data-label="Role"><Badge tone={u.role === 'admin' ? 'info' : 'neutral'}>{u.role}</Badge></td>
+                      <td data-label="Status"><Badge tone={u.isActive ? 'success' : 'danger'}>{u.isActive ? 'Active' : 'Disabled'}</Badge></td>
+                      <td data-label="Joined" className="small">{formatDate(u.createdAt)}</td>
                       <td className="actions">
                         {!isMe && (
                           <>

@@ -43,7 +43,7 @@ export default function Categories() {
           empty={<EmptyState title="No categories yet." action={<button className="btn btn-primary" onClick={() => setEditing(EMPTY)}>Add your first category</button>} />}
         >
           <div className="table-wrap">
-            <table className="table">
+            <table className="table table-stack">
               <thead>
                 <tr>
                   <th>Category</th>
@@ -66,13 +66,13 @@ export default function Categories() {
                         </div>
                       </div>
                     </td>
-                    <td>
+                    <td data-label="Sub-categories">
                       <Link to={`/subcategories?category=${c._id}`}>{c.subCategories.length} sub-categories</Link>
                     </td>
-                    <td>{c.productCount}</td>
-                    <td>{c.order}</td>
-                    <td>
-                      <div className="row">
+                    <td data-label="Products">{c.productCount}</td>
+                    <td data-label="Order">{c.order}</td>
+                    <td data-label="Status">
+                      <div className="row wrap">
                         <StatusBadge active={c.isActive} />
                         {!c.showInNav && <Badge>Not in nav</Badge>}
                       </div>
