@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/client';
+import StorePreview from '../components/settings/StorePreview';
 import { ErrorState, Loader, PageHeader } from '../components/ui/Common';
 import { Field, FormGrid, FormSection, Toggle } from '../components/ui/Form';
 import { ImageSourceInput, toMedia } from '../components/ui/ImageInput';
 import { useToast } from '../context/ToastContext';
-import { FONTS, getFont, loadFonts } from '../utils/fonts';
+import { FONTS, loadFonts } from '../utils/fonts';
 import { THEMES, getTheme } from '../utils/themes';
 
 // Mirrors the defaults in the backend's Setting model, for settings saved before these options existed.
@@ -33,10 +34,6 @@ const normalize = (s) => ({
   animation: { ...DEFAULTS.animation, ...s.animation },
 });
 
-const shownImage = (media) => media?.[media.source] ?? '';
-
-const BUTTON_RADIUS = { square: 0, rounded: 10, pill: 999 };
-const PREVIEW_MENU = ['Home', 'Jewellery', 'Décor'];
 const fontOptions = [['theme', 'Theme default'], ...FONTS.map((f) => [f.id, f.name])];
 
 /** A <select> over [value, label] pairs. */
@@ -45,90 +42,6 @@ function Choice({ value, onChange, options }) {
     <select value={value} onChange={(e) => onChange(e.target.value)}>
       {options.map(([v, label]) => <option key={v} value={v}>{label}</option>)}
     </select>
-  );
-}
-
-/** A miniature storefront rendered with the chosen theme, logo, banner, fonts, header and card styles. */
-function ThemePreview({ form }) {
-  const t = getTheme(form.theme.preset);
-  const { appearance: a, header: h } = form;
-  const accent = form.theme.customColors ? form.theme.primaryColor : t.accent;
-  const accentDark = form.theme.customColors ? form.theme.primaryDark : t.accentDark;
-  const onAccent = t.onAccent ?? '#fff';
-  const logo = shownImage(form.logoMedia);
-  const heroImage = shownImage(form.hero.imageMedia);
-  const heading = getFont(a.headingFont)?.family ?? t.heading;
-  const body = getFont(a.bodyFont)?.family ?? t.body;
-  const btn = { background: accent, color: onAccent, borderRadius: BUTTON_RADIUS[a.buttonShape] ?? t.btnRadius };
-  const card = {
-    theme: { background: t.surface, borderColor: t.border },
-    bordered: { background: t.surface, borderColor: t.border },
-    shadow: { background: t.surface, borderColor: 'transparent', boxShadow: '0 4px 14px rgba(0,0,0,.12)' },
-    flat: { background: t.border, borderColor: 'transparent' },
-  }[a.cardStyle];
-
-  const menuItem = (name, i) => {
-    const active = i === 0;
-    const style = {
-      underline: { borderBottom: `2px solid ${active ? accent : 'transparent'}`, color: active ? accentDark : t.ink },
-      plain: { color: active ? accentDark : t.ink },
-      pills: { borderRadius: 999, background: active ? accent : 'transparent', color: active ? onAccent : t.ink },
-      boxed: { border: `1px solid ${active ? accent : t.border}`, borderRadius: btn.borderRadius, color: active ? accentDark : t.ink },
-    }[h.menuStyle];
-    return <span key={name} className="tp-menu-item" style={style}>{h.menuUppercase ? name.toUpperCase() : name}</span>;
-  };
-  const menu = <div className={`tp-menu ${h.menuAlign === 'center' ? 'center' : ''}`}>{PREVIEW_MENU.map(menuItem)}</div>;
-  const sections = form.homeSections.filter((s) => s.enabled).map((s) => s.id);
-
-  const blocks = {
-    hero: (
-      <div
-        key="hero"
-        className={`tp-hero tp-hero-${form.hero.height} ${form.hero.align === 'center' ? 'center' : ''}`}
-        style={{
-          borderRadius: t.radius,
-          background: heroImage ? `linear-gradient(90deg, rgba(20,15,10,.75), rgba(20,15,10,.2)), url(${heroImage}) center / cover` : t.hero,
-        }}
-      >
-        <strong style={{ fontFamily: heading }}>{form.hero.title}</strong>
-        <span className="tp-btn" style={btn}>{form.hero.ctaText || 'Shop now'}</span>
-      </div>
-    ),
-    featured: (
-      <div key="featured" className={`tp-cards tp-hover-${form.animation.cardHover}`}>
-        {['Gold Ring', 'Brass Vase'].map((name) => (
-          <div key={name} className="tp-card" style={{ ...card, borderRadius: t.radius, '--tp-accent': accent }}>
-            <div className="tp-img" style={{ background: a.cardStyle === 'flat' ? t.surface : t.border }} />
-            <span>{name}</span>
-            <span style={{ color: accentDark, fontWeight: 700 }}>₹12,999</span>
-          </div>
-        ))}
-      </div>
-    ),
-    categories: (
-      <div key="categories" className="tp-chips">
-        {['💍 Rings', '📿 Necklaces', '🏺 Vases'].map((c) => (
-          <span key={c} style={{ ...card, borderRadius: t.radius, color: t.ink }}>{c}</span>
-        ))}
-      </div>
-    ),
-    videos: <div key="videos" className="tp-video" style={{ borderRadius: t.radius }}>▶</div>,
-  };
-
-  return (
-    <div className="theme-preview" style={{ background: t.bg, color: t.ink, fontFamily: body, borderColor: t.border }}>
-      {form.announcement && <div className="tp-announce" style={{ background: t.announce[0], color: t.announce[1] }}>{form.announcement}</div>}
-      <div className={`tp-nav tp-nav-${h.style}`} style={{ background: t.surface, borderColor: t.border }}>
-        <span className="tp-brand" style={{ fontFamily: heading }}>
-          {logo ? <img src={logo} alt="" /> : <span style={{ color: accent }}>◆</span>}
-          {form.siteName}
-        </span>
-        {h.style === 'compact' && menu}
-        <span className="tp-cart" style={{ color: t.muted }}>Cart</span>
-      </div>
-      {h.style !== 'compact' && <div className="tp-menu-bar" style={{ borderColor: t.border }}>{menu}</div>}
-      <div className="tp-body">{sections.map((id) => blocks[id])}</div>
-    </div>
   );
 }
 
@@ -217,7 +130,7 @@ export default function Settings() {
         actions={<button className="btn btn-primary" disabled={saving}>{saving ? 'Saving…' : 'Save changes'}</button>}
       />
 
-      <div className="two-col">
+      <div className="settings-layout">
         <div className="stack">
           <FormSection title="Theme" description="Changes the colours, fonts and shapes across the whole store.">
             <FormGrid>
@@ -231,7 +144,6 @@ export default function Settings() {
               {[theme.bg, theme.surface, theme.accent, theme.accentDark, theme.ink].map((c, i) => <span key={i} style={{ background: c }} />)}
               <span className="muted small">{theme.heading.split(',')[0].replace(/'/g, '')} headings · {theme.body.split(',')[0].replace(/'/g, '')} text</span>
             </div>
-            <ThemePreview form={form} />
             <Toggle label="Use my own accent colour instead of the theme's" checked={form.theme.customColors} onChange={setNested('theme', 'customColors')} />
             {form.theme.customColors && (
               <FormGrid>
@@ -346,9 +258,7 @@ export default function Settings() {
               </Field>
             </FormGrid>
           </FormSection>
-        </div>
 
-        <div className="stack">
           <FormSection title="Animations" description="Visitors who turn off motion in their device settings won't see these.">
             <FormGrid>
               <Field label="Page transition">
@@ -358,7 +268,7 @@ export default function Settings() {
                   options={[['none', 'None'], ['fade', 'Fade'], ['slide', 'Slide up'], ['zoom', 'Zoom']]}
                 />
               </Field>
-              <Field label="Product card hover" hint="Hover the cards in the preview">
+              <Field label="Product card hover" hint="Hover the products in the preview">
                 <Choice
                   value={form.animation.cardHover}
                   onChange={setNested('animation', 'cardHover')}
@@ -399,6 +309,10 @@ export default function Settings() {
             </FormGrid>
           </FormSection>
         </div>
+
+        <aside className="settings-preview">
+          <StorePreview form={form} />
+        </aside>
       </div>
     </form>
   );
