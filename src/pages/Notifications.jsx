@@ -16,7 +16,7 @@ const AUDIENCES = [
 ];
 const AUDIENCE_LABEL = Object.fromEntries(AUDIENCES.map((a) => [a.id, a.label]));
 
-const EMPTY = { title: '', message: '', image: '', product: '', link: '', audience: 'all', recipients: [], showAsPopup: true, expiresAt: '', isActive: true };
+const EMPTY = { title: '', message: '', image: '', product: '', link: '', audience: 'all', recipients: [], expiresAt: '', isActive: true };
 
 // <input type="datetime-local"> works in local time without a zone; the API stores ISO dates.
 const toLocalInput = (iso) => {
@@ -58,7 +58,7 @@ export default function Notifications() {
     <>
       <PageHeader
         title="Notifications"
-        subtitle="Announce new arrivals and offers. They appear in the store's 🔔 bell, and optionally as a popup."
+        subtitle="Announce new arrivals and offers. They appear in the store's 🔔 bell."
         actions={newButton}
       />
 
@@ -94,10 +94,7 @@ export default function Notifications() {
                         )}
                       </td>
                       <td>
-                        <div className="row wrap">
-                          {expired ? <Badge tone="warning">Expired</Badge> : <StatusBadge active={n.isActive} />}
-                          {n.showAsPopup && <Badge>Popup</Badge>}
-                        </div>
+                        {expired ? <Badge tone="warning">Expired</Badge> : <StatusBadge active={n.isActive} />}
                       </td>
                       <td>{n.readCount}</td>
                       <td className="small">{formatDate(n.createdAt)}</td>
@@ -222,9 +219,7 @@ function NotificationForm({ initial, onClose, onSaved }) {
           </Field>
         </FormGrid>
         <div className="row toggles">
-          <Toggle label="Active" checked={form.isActive} onChange={set('isActive')} />
-          <Toggle label="Show as popup when the store opens" checked={form.showAsPopup} onChange={set('showAsPopup')} />
-        </div>
+          <Toggle label="Active" checked={form.isActive} onChange={set('isActive')} />        </div>
       </form>
     </Modal>
   );
