@@ -12,6 +12,7 @@ const NAV = [
   { section: 'Sales' },
   { to: '/orders', label: 'Orders', icon: '🧾' },
   { to: '/users', label: 'Customers & Admins', icon: '👥' },
+  { to: '/notifications', label: 'Notifications', icon: '🔔' },
   { section: 'Website' },
   { to: '/settings', label: 'Site Settings', icon: '⚙️' },
 ];

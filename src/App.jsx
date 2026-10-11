@@ -5,6 +5,7 @@ import { useAuth } from './context/AuthContext';
 import Categories from './pages/Categories';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
+import Notifications from './pages/Notifications';
 import Orders from './pages/Orders';
 import ProductForm from './pages/ProductForm';
 import Products from './pages/Products';
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="videos" element={<Videos />} />
         <Route path="orders" element={<Orders />} />
         <Route path="users" element={<Users />} />
+        <Route path="notifications" element={<Notifications />} />
         <Route path="settings" element={<Settings />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
