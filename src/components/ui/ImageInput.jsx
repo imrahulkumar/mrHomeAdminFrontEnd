@@ -2,6 +2,8 @@ import { useRef, useState } from 'react';
 import { api } from '../../api/client';
 import { useToast } from '../../context/ToastContext';
 
+const MAX_UPLOAD_MB = 4; // matches the backend limit (Vercel rejects bodies over ~4.5MB)
+
 function useUploader(onUploaded) {
   const notify = useToast();
   const [uploading, setUploading] = useState(false);
@@ -11,6 +13,10 @@ function useUploader(onUploaded) {
     setUploading(true);
     try {
       for (const file of files) {
+        if (file.size > MAX_UPLOAD_MB * 1024 * 1024) {
+          notify(`"${file.name}" is larger than ${MAX_UPLOAD_MB}MB. Please choose a smaller image.`, 'error');
+          continue;
+        }
         const { url } = await api.upload(file);
         onUploaded(url);
       }
