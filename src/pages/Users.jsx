@@ -127,7 +127,7 @@ function AddAdmin({ onClose, onSaved }) {
         <FormGrid>
           <Field label="Name *" span={2}><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required /></Field>
           <Field label="Email *"><input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required /></Field>
-          <Field label="Password *" hint="At least 6 characters"><input type="password" minLength={6} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required /></Field>
+          <Field label="Password *" hint="8–72 characters"><input type="password" minLength={8} maxLength={72} autoComplete="new-password"value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required /></Field>
         </FormGrid>
       </form>
     </Modal>
