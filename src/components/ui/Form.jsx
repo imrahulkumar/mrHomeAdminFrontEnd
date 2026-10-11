@@ -1,12 +1,13 @@
 /** Small form building blocks shared by every admin page. */
 
-export function Field({ label, hint, children, span = 1 }) {
+/** Pass as="div" when the control holds several buttons, so clicking the label doesn't press the first one. */
+export function Field({ label, hint, children, span = 1, as: Tag = 'label' }) {
   return (
-    <label className={`field ${span === 2 ? 'span-2' : ''}`}>
+    <Tag className={`field ${span === 2 ? 'span-2' : ''}`}>
       <span className="field-label">{label}</span>
       {children}
       {hint && <span className="field-hint">{hint}</span>}
-    </label>
+    </Tag>
   );
 }
 
