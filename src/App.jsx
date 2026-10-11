@@ -24,22 +24,22 @@ export default function App() {
 
   return (
     <>
-    <Routes>
-      <Route element={<AdminLayout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="categories" element={<Categories />} />
-        <Route path="subcategories" element={<SubCategories />} />
-        <Route path="products" element={<Products />} />
-        <Route path="products/:id" element={<ProductForm />} />
-        <Route path="videos" element={<Videos />} />
-        <Route path="orders" element={<Orders />} />
-        <Route path="users" element={<Users />} />
-        <Route path="notifications" element={<Notifications />} />
-        <Route path="settings" element={<Settings />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Route>
-    </Routes>
-    <InstallPrompt name="Store Admin" icon={appIconUrl(192)} />
+      <Routes>
+        <Route element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="subcategories" element={<SubCategories />} />
+          <Route path="products" element={<Products />} />
+          <Route path="products/:id" element={<ProductForm />} />
+          <Route path="videos" element={<Videos />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="users" element={<Users />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+      <InstallPrompt name="Store Admin" icon={appIconUrl(192)} />
     </>
   );
 }
